@@ -186,9 +186,11 @@ public class OuterAndFill
       cookStatic(stop_after, static_cook_height, static_cook_time);
     }
 
-	if (deep > maxLimit)
+	if (one.deep > maxLimit)//deep was initially not a member of any class object. Tutch assumed that deep belong to the argument one
+		// Tutch modified deep to one.deep
       throw new MatException("Material not enough for fill");
-    if (deep > maxLimit)
+    if (two.deep > maxLimit)//deep was initially not a member of any class object. Tutch assumed that deep belong to the argument one
+		// Tutch modified deep to two.deep
       throw new MatException("Material not enough for outer");
     out.close();
     return file.getAbsolutePath();
@@ -311,7 +313,7 @@ public class OuterAndFill
 
 
     for (int j = thickness; j <= laps; j++) { boolean cookOn;
-      boolean cookOn;
+      //duplicate: boolean cookOn;
       if (j % cook_lap_on_fill == 0.0D) {
         cookOn = true;
       } else {
@@ -379,7 +381,8 @@ public class OuterAndFill
     y.clear();
     e.clear();
     
-    e.add(Double.valueOf(deep));
+    e.add(Double.valueOf(mat.deep));//deep was initially not a member of any class object. Tutch assumed that deep belong to the argument mat
+	// Tutch modified deep to mat.deep
     
     int thickness = i > bottom_layers ? top_thickness : bottom_thickness;
     
@@ -456,7 +459,9 @@ public class OuterAndFill
     if (z < z_lift) {
       out.write(String.format("G01 Z%4.2f  F%4.2f\n", new Object[] { Double.valueOf(z_lift), Double.valueOf(travel_speed) }));
     }
-    deep = ((Double)e.get(e.size() - 1)).doubleValue();
+    mat.deep = ((Double)e.get(e.size() - 1)).doubleValue();//deep was initially not a member of any class object. Tutch assumed that deep belong to the argument mat
+	// Tutch modified deep to mat.deep
+    
   }
   
   private static void printFill(OuterAndFill.Material mat, int i) throws IOException
@@ -469,7 +474,9 @@ public class OuterAndFill
     y.clear();
     e.clear();
     
-    e.add(Double.valueOf(deep));
+    e.add(Double.valueOf(mat.deep));//deep was initially not a member of any class object. Tutch assumed that deep belong to the argument mat
+	// Tutch modified deep to mat.deep
+    
     
     int thickness = i > bottom_layers ? top_thickness : bottom_thickness;
     
@@ -553,7 +560,9 @@ public class OuterAndFill
     if (z < z_lift) {
       out.write(String.format("G01 Z%4.2f  F%4.2f\n", new Object[] { Double.valueOf(z_lift), Double.valueOf(travel_speed) }));
     }
-    deep = ((Double)e.get(e.size() - 1)).doubleValue();
+    mat.deep = ((Double)e.get(e.size() - 1)).doubleValue();//deep was initially not a member of any class object. Tutch assumed that deep belong to the argument mat
+	// Tutch modified deep to mat.deep
+    
   }
   
   private static String pick1() {
@@ -598,25 +607,25 @@ public class OuterAndFill
   static class Material { private double deep;
     
     Material() {}
-    private boolean turn = false;
+    private static boolean turn = false; //modified to static variable
     
     public static Material pickMaterial(Material one, Material two) throws IOException {
       if (turn) {
-        OuterAndFill.out.write(OuterAndFill.access$0());
+        //OuterAndFill.out.write(OuterAndFill.access$0());
         return one;
       }
-      OuterAndFill.out.write(OuterAndFill.access$1());
+     // OuterAndFill.out.write(OuterAndFill.access$1());
       return two;
     }
     
     public static void dropMaterial(Material one, Material two) throws IOException
     {
       if (turn) {
-        OuterAndFill.out.write(OuterAndFill.access$2());
+        //OuterAndFill.out.write(OuterAndFill.access$2());
         turn = false;
       }
       else {
-        OuterAndFill.out.write(OuterAndFill.access$3());
+        //OuterAndFill.out.write(OuterAndFill.access$3());
         turn = false;
       }
     }
@@ -628,7 +637,9 @@ public class OuterAndFill
       OuterAndFill.out.write(String.format("G01 F%4.2f E%4.2f\n", new Object[] { Double.valueOf(initial_dump_speed), Double.valueOf(load_depth) }));
       OuterAndFill.out.write(String.format("G01 F%4.2f E%4.2f\n", new Object[] { Double.valueOf(initial_dump_speed), Double.valueOf(load_depth - OuterAndFill.retract_after_dump) }));
       OuterAndFill.out.write(String.format("G01 Z%4.2f F%4.2f\n", new Object[] { Double.valueOf(dump[2] + OuterAndFill.z_lift), Double.valueOf(OuterAndFill.travel_speed) }));
-      deep += load_depth;
+      mat.deep += load_depth;//deep was initially not a member of any class object. Tutch assumed that deep belong to the argument mat
+  	// Tutch modified deep to mat.deep
+      
       turn = true;
     }
   }

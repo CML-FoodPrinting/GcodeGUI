@@ -450,7 +450,8 @@ public class Pyramid {
 			out.write(String.format("G01 Z%4.2f  F%4.2f\n",
 					new Object[] { Double.valueOf(z_lift), Double.valueOf(travel_speed) }));
 		}
-		deep = ((Double) e.get(e.size() - 1)).doubleValue();
+		mat.deep = ((Double) e.get(e.size() - 1)).doubleValue();//deep was initially not a member of any class object. Tutch assumed that deep belong to the argument mat
+		// Tutch modified deep to mat.deep
 	}
 
 	
@@ -466,7 +467,8 @@ public class Pyramid {
 		y.clear();
 		e.clear();
 
-		e.add(Double.valueOf(deep));
+		e.add(Double.valueOf(mat.deep));//deep was initially not a member of any class object. Tutch assumed that deep belong to the argument mat
+		// Tutch modified deep to mat.deep
 
 		int thickness = i > bottom_layers ? top_thickness : bottom_thickness;
 
@@ -551,7 +553,8 @@ public class Pyramid {
 			out.write(String.format("G01 Z%4.2f  F%4.2f\n",
 					new Object[] { Double.valueOf(z_lift), Double.valueOf(travel_speed) }));
 		}
-		deep = ((Double) e.get(e.size() - 1)).doubleValue();
+		mat.deep = ((Double) e.get(e.size() - 1)).doubleValue();//deep was initially not a member of any class object. Tutch assumed that deep belong to the argument mat
+		// Tutch modified deep to mat.deep
 	}
 
 	private static String pick1() {
@@ -573,11 +576,11 @@ public class Pyramid {
 		}
 
 		public static void pickMaterial() throws IOException {
-			Pyramid.out.write(Pyramid.access$0()); //undefined method access()?
+			//Pyramid.out.write(Pyramid.access$0()); //undefined method access()?
 		}
 
 		public static void dropMaterial() throws IOException {
-			Pyramid.out.write(Pyramid.access$1()); //undefined method access()?
+			//Pyramid.out.write(Pyramid.access$1()); //undefined method access()?
 		}
 
 		public static void initialDump(Material mat, double load_depth, double initial_dump_speed, double[] dump)
@@ -591,7 +594,8 @@ public class Pyramid {
 					Double.valueOf(load_depth - Pyramid.retract_after_dump) }));
 			Pyramid.out.write(String.format("G01 Z%4.2f F%4.2f\n",
 					new Object[] { Double.valueOf(dump[2] + Pyramid.z_lift), Double.valueOf(Pyramid.travel_speed) }));
-			deep += load_depth;
+			mat.deep += load_depth;//deep was initially not a member of any class object. Tutch assumed that deep belong to the argument mat
+			// Tutch modified deep to mat.deep
 		}
 	}
 }
