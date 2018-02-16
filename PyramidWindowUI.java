@@ -59,8 +59,8 @@ HashMap<String, JPanel> panels;
     JPanel p = new JPanel(new GridLayout(0, 2)); 
     panels.put("Materials", p); //hash the p panel
     tabbedPane.addTab("Materials", p); //add panel p to our panel of tabs 
-    ((JPanel)panels.get("Materials")).add(num_materials);
-    ((JPanel)panels.get("Materials")).add(radioPanel);
+    (panels.get("Materials")).add(num_materials); //Sarah removed cast to JPanel
+    (panels.get("Materials")).add(radioPanel);
     
     add(tabbedPane); //add tabs
   }

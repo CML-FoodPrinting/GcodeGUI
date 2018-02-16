@@ -153,13 +153,14 @@ public class PyrWindow extends JFrame implements java.awt.event.ActionListener {
 		for (PyrWindow.Entry entry : entries) {
 			if (panels.containsKey(entry.tab)) { // this tab belongs to the
 													// Entry subclass
-				((JPanel) panels.get(entry.tab)).add(entry.label); // this label
+				//Sarah removed cast to JPanel
+				( panels.get(entry.tab)).add(entry.label); 			// this label
 																	// now
 																	// belongs
 																	// to the
 																	// Entry
 																	// subclass
-				((JPanel) panels.get(entry.tab)).add(entry.field); // this field
+				( panels.get(entry.tab)).add(entry.field); 			// this field
 																	// belongs
 																	// to the
 																	// Entry
@@ -184,8 +185,9 @@ public class PyrWindow extends JFrame implements java.awt.event.ActionListener {
 			p.add(load);
 		}
 
-		((JPanel) panels.get("Multimaterial Settings")).add(generate);
-		((JPanel) panels.get("Multimaterial Settings")).add(load);
+		//Sarah removed casts to Jpanel here
+		(panels.get("Multimaterial Settings")).add(generate);
+		(panels.get("Multimaterial Settings")).add(load);
 
 		add(tabbedPane);
 	} // inti() method ends here
@@ -251,7 +253,7 @@ public class PyrWindow extends JFrame implements java.awt.event.ActionListener {
 	// saveCongif() is called by the Generate option portion of
 	// actionPerformed()
 	public void saveConfig(HashMap<String, String> settings) throws IOException {
-		String name = (String) settings.get("output_name");
+		String name = settings.get("output_name");
 		if (name.length() == 0) {
 			name = "no_name";
 		}
@@ -284,7 +286,8 @@ public class PyrWindow extends JFrame implements java.awt.event.ActionListener {
 				// Next, we want to iterate over all entries in the entries
 				// ArrayList
 				localIterator = entries.iterator(); // continue;
-				PyrWindow.Entry e = (PyrWindow.Entry) localIterator.next();
+				//Sarah removed cast to (PyrWindow.Entry) 
+				PyrWindow.Entry e = localIterator.next();
 
 				// if the name of an entry matches with the first line of the
 				// load file,

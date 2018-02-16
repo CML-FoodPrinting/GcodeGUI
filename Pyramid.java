@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+//@SuppressWarnings("unchecked")
 public class Pyramid {
 	static double travel_speed = 6000.0D;
 	static double print_speed;
@@ -43,7 +44,7 @@ public class Pyramid {
 	// writeGcode() takes in A hashmap<name, value> as arugument where name and
 	// value are members of an entry. eg name: "layer_height", value: "1.2"
 	public static String writeGcode(HashMap<String, String> settings) throws IOException {
-		String name = (String) settings.get("output_name"); // "output_name" is
+		String name = settings.get("output_name"); // "output_name" is
 															// a member of
 															// Entry, which has
 															// been hashed into
@@ -59,29 +60,29 @@ public class Pyramid {
 		////// ******///////
 		// PyrWindow.entries that have been inserted by users. Obtaining these
 		////// values by string parsing
-		layer_height = Double.parseDouble((String) settings.get("layer_height"));
-		twist_angle = Double.parseDouble((String) settings.get("twist_angle"));
-		total_num_layers = Integer.parseInt((String) settings.get("num_layers"));
-		centre_to_side_length = Double.parseDouble((String) settings.get("base_width"));
+		layer_height = Double.parseDouble(settings.get("layer_height"));
+		twist_angle = Double.parseDouble(settings.get("twist_angle"));
+		total_num_layers = Integer.parseInt(settings.get("num_layers"));
+		centre_to_side_length = Double.parseDouble(settings.get("base_width"));
 		// stop_after is the number of layer to print
-		int stop_after = Integer.parseInt((String) settings.get("stop_after")); 
-		side_count = Integer.parseInt((String) settings.get("side_count"));
-		x_center = Integer.parseInt((String) settings.get("x_center"));
-		y_center = Integer.parseInt((String) settings.get("y_center"));
+		int stop_after = Integer.parseInt(settings.get("stop_after")); 
+		side_count = Integer.parseInt(settings.get("side_count"));
+		x_center = Integer.parseInt(settings.get("x_center"));
+		y_center = Integer.parseInt(settings.get("y_center"));
 
-		top_thickness = Integer.parseInt((String) settings.get("top_thickness"));
-		bottom_thickness = Integer.parseInt((String) settings.get("bottom_thickness"));
-		bottom_layers = Integer.parseInt((String) settings.get("bottom_layers"));
+		top_thickness = Integer.parseInt(settings.get("top_thickness"));
+		bottom_thickness = Integer.parseInt(settings.get("bottom_thickness"));
+		bottom_layers = Integer.parseInt(settings.get("bottom_layers"));
 
-		retraction = Double.parseDouble((String) settings.get("retraction"));
-		bed_z = Double.parseDouble((String) settings.get("bed_z"));
-		print_speed = Double.parseDouble((String) settings.get("print_speed"));
+		retraction = Double.parseDouble(settings.get("retraction"));
+		bed_z = Double.parseDouble(settings.get("bed_z"));
+		print_speed = Double.parseDouble(settings.get("print_speed"));
 
 		double maxLimit = 123.0D;
 		double priming_extrusion = 0.0D;
 		double syringe_dia = 22.5D;
 		double nozzle_dia = 1.8D;
-		double extrusion_multiplier = Double.parseDouble((String) settings.get("extrusion_multiplier"));
+		double extrusion_multiplier = Double.parseDouble(settings.get("extrusion_multiplier"));
 
 		double extrusion_width = 1.5D * nozzle_dia;
 		unit_E = extrusion_multiplier
@@ -90,16 +91,16 @@ public class Pyramid {
 				/ (3.141592653589793D * (syringe_dia / 2.0D) * (syringe_dia / 2.0D));
 
 		cook_y_offset = -62.0D;
-		cook_temp = Double.parseDouble((String) settings.get("cook_temp"));
-		cook_temp_standby = Double.parseDouble((String) settings.get("cook_temp_standby"));
-		cook_speed_outer = Double.parseDouble((String) settings.get("cook_speed_outer"));
-		cook_lift = Double.parseDouble((String) settings.get("cook_lift"));
-		int cook_outer = Integer.parseInt((String) settings.get("cook_outer"));
-		double static_cook_height = Double.parseDouble((String) settings.get("static_cook_height"));
-		double static_cook_time = Double.parseDouble((String) settings.get("static_cook_time"));
+		cook_temp = Double.parseDouble(settings.get("cook_temp"));
+		cook_temp_standby = Double.parseDouble(settings.get("cook_temp_standby"));
+		cook_speed_outer = Double.parseDouble(settings.get("cook_speed_outer"));
+		cook_lift = Double.parseDouble(settings.get("cook_lift"));
+		int cook_outer = Integer.parseInt(settings.get("cook_outer"));
+		double static_cook_height = Double.parseDouble(settings.get("static_cook_height"));
+		double static_cook_time = Double.parseDouble(settings.get("static_cook_time"));
 
 		double[] dump = { 10.0D, 150.0D, 5.0D };
-		double load_depth = Double.parseDouble((String) settings.get("load_depth")) + 26.0D;
+		double load_depth = Double.parseDouble(settings.get("load_depth")) + 26.0D;
 		double initial_dump_speed = 200.0D;
 
 		spacing = extrusion_width - layer_height * 0.21460183660255172D;
@@ -223,13 +224,13 @@ public class Pyramid {
 			//For each layer of shell, we add x-cooridinate to list x, we also add to y-coordnate to list y 
 			for (int index = 0; index < t.size(); index++) {
 				x.add(Double.valueOf(x_center + (curr_base - j * Math.sqrt(3.0D) * spacing)
-						* Math.cos(((Double) t.get(index)).doubleValue())));
+						* Math.cos(( t.get(index)).doubleValue())));
 				y.add(Double.valueOf(y_center + (curr_base - j * Math.sqrt(3.0D) * spacing)
-						* Math.sin(((Double) t.get(index)).doubleValue())));
+						* Math.sin((t.get(index)).doubleValue())));
 
 				if (j == thickness / 2) {
-					x_cook.add((Double) x.get(x.size() - 1));
-					y_cook.add((Double) y.get(y.size() - 1));
+					x_cook.add( x.get(x.size() - 1));
+					y_cook.add( y.get(y.size() - 1));
 				}
 			}
 		}
@@ -240,14 +241,14 @@ public class Pyramid {
 		if (z < z_lift) {
 			out.write(String.format("G01 X%4.2f Y%4.2f Z%4.2f F%4.2f\n",
 					new Object[] { x_cook.get(0),
-							Double.valueOf(((Double) y_cook.get(0)).doubleValue() + cook_y_offset),
+							Double.valueOf(( y_cook.get(0)).doubleValue() + cook_y_offset),
 							Double.valueOf(z_lift + cook_lift), Double.valueOf(travel_speed) }));
 			out.write(String.format("G01 Z%4.2f F%4.2f\n",
 					new Object[] { Double.valueOf(z + cook_lift), Double.valueOf(travel_speed) }));
 		} else {
 			out.write(String.format("G01 X%4.2f Y%4.2f Z%4.2f F%4.2f\n",
 					new Object[] { x_cook.get(0),
-							Double.valueOf(((Double) y_cook.get(0)).doubleValue() + cook_y_offset),
+							Double.valueOf(( y_cook.get(0)).doubleValue() + cook_y_offset),
 							Double.valueOf(z + cook_lift), Double.valueOf(travel_speed) }));
 		}
 
@@ -257,7 +258,7 @@ public class Pyramid {
 		for (int j = 2; j <= x_cook.size(); j++) {
 			out.write(String.format("G01 X%4.2f Y%4.2f Z%4.2f F%4.2f\n",
 					new Object[] { x_cook.get(j - 1),
-							Double.valueOf(((Double) y_cook.get(j - 1)).doubleValue() + cook_y_offset),
+							Double.valueOf(( y_cook.get(j - 1)).doubleValue() + cook_y_offset),
 							Double.valueOf(z + cook_lift), Double.valueOf(cook_speed_outer) }));
 		}
 
@@ -313,13 +314,13 @@ public class Pyramid {
 
 			for (int index = 0; index < t.size(); index++) {
 				x.add(Double.valueOf(x_center + (curr_base - j * Math.sqrt(3.0D) * spacing)
-						* Math.cos(((Double) t.get(index)).doubleValue())));
+						* Math.cos((t.get(index)).doubleValue())));
 				y.add(Double.valueOf(y_center + (curr_base - j * Math.sqrt(3.0D) * spacing)
-						* Math.sin(((Double) t.get(index)).doubleValue())));
+						* Math.sin(( t.get(index)).doubleValue())));
 
 				if (cookOn) {
-					x_cook.add((Double) x.get(x.size() - 1));
-					y_cook.add((Double) y.get(y.size() - 1));
+					x_cook.add( x.get(x.size() - 1));
+					y_cook.add( y.get(y.size() - 1));
 				}
 			}
 		}
@@ -330,14 +331,14 @@ public class Pyramid {
 			if (z < z_lift) {
 				out.write(String.format("G01 X%4.2f Y%4.2f Z%4.2f F%4.2f\n",
 						new Object[] { x_cook.get(0),
-								Double.valueOf(((Double) y_cook.get(0)).doubleValue() + cook_y_offset),
+								Double.valueOf(( y_cook.get(0)).doubleValue() + cook_y_offset),
 								Double.valueOf(z_lift + cook_lift), Double.valueOf(travel_speed) }));
 				out.write(String.format("G01 Z%4.2f F%4.2f\n",
 						new Object[] { Double.valueOf(z + cook_lift), Double.valueOf(travel_speed) }));
 			} else {
 				out.write(String.format("G01 X%4.2f Y%4.2f Z%4.2f F%4.2f\n",
 						new Object[] { x_cook.get(0),
-								Double.valueOf(((Double) y_cook.get(0)).doubleValue() + cook_y_offset),
+								Double.valueOf((y_cook.get(0)).doubleValue() + cook_y_offset),
 								Double.valueOf(z + cook_lift), Double.valueOf(travel_speed) }));
 			}
 		}
@@ -347,7 +348,7 @@ public class Pyramid {
 		for (int j = 2; j <= x_cook.size(); j++) {
 			out.write(String.format("G01 X%4.2f Y%4.2f Z%4.2f F%4.2f\n",
 					new Object[] { x_cook.get(j - 1),
-							Double.valueOf(((Double) y_cook.get(j - 1)).doubleValue() + cook_y_offset),
+							Double.valueOf(( y_cook.get(j - 1)).doubleValue() + cook_y_offset),
 							Double.valueOf(z + cook_lift), Double.valueOf(cook_speed_outer) }));
 		}
 
@@ -388,35 +389,35 @@ public class Pyramid {
 
 			for (int index = 0; index < t.size(); index++) {
 				x.add(Double.valueOf(x_center + (curr_base - j * Math.sqrt(3.0D) * spacing)
-						* Math.cos(((Double) t.get(index)).doubleValue())));
+						* Math.cos(( t.get(index)).doubleValue())));
 				y.add(Double.valueOf(y_center + (curr_base - j * Math.sqrt(3.0D) * spacing)
-						* Math.sin(((Double) t.get(index)).doubleValue())));
+						* Math.sin(( t.get(index)).doubleValue())));
 			}
 		}
 
 		for (int k = 0; k <= thickness - 1; k++) {
 			for (int l = 1; l <= t.size() - 1; l++) {
 				double distance = Math.sqrt(Math
-						.pow(((Double) x.get(k * t.size() + l)).doubleValue()
-								- ((Double) x.get(k * t.size() + l - 1)).doubleValue(), 2.0D)
-						+ Math.pow(((Double) y.get(k * t.size() + l)).doubleValue()
-								- ((Double) y.get(k * t.size() + l - 1)).doubleValue(), 2.0D));
+						.pow((x.get(k * t.size() + l)).doubleValue()
+								- ( x.get(k * t.size() + l - 1)).doubleValue(), 2.0D)
+						+ Math.pow((y.get(k * t.size() + l)).doubleValue()
+								- (y.get(k * t.size() + l - 1)).doubleValue(), 2.0D));
 				e.add(Double.valueOf(unit_E * distance));
 			}
 		}
 
 		for (int k = 1; k < e.size(); k++) {
-			e.set(k, Double.valueOf(((Double) e.get(k - 1)).doubleValue() + ((Double) e.get(k)).doubleValue()));
+			e.set(k, Double.valueOf(( e.get(k - 1)).doubleValue() + ( e.get(k)).doubleValue()));
 		}
 
 		for (int k = 1; k <= thickness - 1; k++) {
 			ArrayList<Double> e2 = new ArrayList<Double>();
 			for (int index = 1; index <= k * t.size(); index++) {
-				e2.add((Double) e.get(index - 1));
+				e2.add( e.get(index - 1));
 			}
-			e2.add((Double) e.get(k * t.size() - 1));
+			e2.add( e.get(k * t.size() - 1));
 			for (int index = k * t.size() + 1; index <= e.size(); index++) {
-				e2.add((Double) e.get(index - 1));
+				e2.add(e.get(index - 1));
 			}
 
 			e = e2;
@@ -439,7 +440,7 @@ public class Pyramid {
 		for (int j = 1; j <= x.size(); j++) {
 			out.write(String.format("G01 X%4.2f Y%4.2f Z%4.2f  F%4.2f E%4.2f\n", new Object[] { x.get(j - 1),
 					y.get(j - 1), Double.valueOf(z), Double.valueOf(print_speed), e.get(j - 1) }));
-			e_last = ((Double) e.get(j - 1)).doubleValue();
+			e_last = ( e.get(j - 1)).doubleValue();
 		}
 
 		if (e_last != 0.0D) {
@@ -450,7 +451,7 @@ public class Pyramid {
 			out.write(String.format("G01 Z%4.2f  F%4.2f\n",
 					new Object[] { Double.valueOf(z_lift), Double.valueOf(travel_speed) }));
 		}
-		mat.deep = ((Double) e.get(e.size() - 1)).doubleValue();//deep was initially not a member of any class object. Tutch assumed that deep belong to the argument mat
+		mat.deep = (e.get(e.size() - 1)).doubleValue();//deep was initially not a member of any class object. Tutch assumed that deep belong to the argument mat
 		// Tutch modified deep to mat.deep
 	}
 
@@ -489,35 +490,35 @@ public class Pyramid {
 
 			for (int index = 0; index < t.size(); index++) {
 				x.add(Double.valueOf(x_center + (curr_base - j * Math.sqrt(3.0D) * spacing)
-						* Math.cos(((Double) t.get(index)).doubleValue())));
+						* Math.cos((t.get(index)).doubleValue())));
 				y.add(Double.valueOf(y_center + (curr_base - j * Math.sqrt(3.0D) * spacing)
-						* Math.sin(((Double) t.get(index)).doubleValue())));
+						* Math.sin(( t.get(index)).doubleValue())));
 			}
 		}
 
 		for (int k = 0; k <= laps - thickness; k++) {
 			for (int l = 1; l < t.size(); l++) {
 				double dist = Math.sqrt(Math
-						.pow(((Double) x.get(k * t.size() + l)).doubleValue()
-								- ((Double) x.get(k * t.size() + l - 1)).doubleValue(), 2.0D)
-						+ Math.pow(((Double) y.get(k * t.size() + l)).doubleValue()
-								- ((Double) y.get(k * t.size() + l - 1)).doubleValue(), 2.0D));
+						.pow((x.get(k * t.size() + l)).doubleValue()
+								- ( x.get(k * t.size() + l - 1)).doubleValue(), 2.0D)
+						+ Math.pow(( y.get(k * t.size() + l)).doubleValue()
+								- (y.get(k * t.size() + l - 1)).doubleValue(), 2.0D));
 				e.add(Double.valueOf(unit_E * dist));
 			}
 		}
 
 		for (int k = 1; k < e.size(); k++) {
-			e.set(k, Double.valueOf(((Double) e.get(k - 1)).doubleValue() + ((Double) e.get(k)).doubleValue()));
+			e.set(k, Double.valueOf(( e.get(k - 1)).doubleValue() + ( e.get(k)).doubleValue()));
 		}
 
 		for (int k = 1; k <= laps - thickness; k++) {
-			ArrayList<Double> e2 = new ArrayList();
+			ArrayList<Double> e2 = new ArrayList<Double>();
 			for (int index = 1; index <= k * t.size(); index++) {
-				e2.add((Double) e.get(index - 1));
+				e2.add( e.get(index - 1));
 			}
-			e2.add((Double) e.get(k * t.size() - 1));
+			e2.add( e.get(k * t.size() - 1));
 			for (int index = k * t.size() + 1; index <= e.size(); index++) {
-				e2.add((Double) e.get(index - 1));
+				e2.add( e.get(index - 1));
 			}
 
 			e = e2;
@@ -542,7 +543,7 @@ public class Pyramid {
 		for (int j = 1; j <= x.size(); j++) {
 			out.write(String.format("G01 X%4.2f Y%4.2f Z%4.2f  F%4.2f E%4.2f\n", new Object[] { x.get(j - 1),
 					y.get(j - 1), Double.valueOf(z), Double.valueOf(print_speed), e.get(j - 1) }));
-			e_last = ((Double) e.get(j - 1)).doubleValue();
+			e_last = ( e.get(j - 1)).doubleValue();
 		}
 
 		if (e_last != 0.0D) {
@@ -553,7 +554,7 @@ public class Pyramid {
 			out.write(String.format("G01 Z%4.2f  F%4.2f\n",
 					new Object[] { Double.valueOf(z_lift), Double.valueOf(travel_speed) }));
 		}
-		mat.deep = ((Double) e.get(e.size() - 1)).doubleValue();//deep was initially not a member of any class object. Tutch assumed that deep belong to the argument mat
+		mat.deep = (e.get(e.size() - 1)).doubleValue();//deep was initially not a member of any class object. Tutch assumed that deep belong to the argument mat
 		// Tutch modified deep to mat.deep
 	}
 
